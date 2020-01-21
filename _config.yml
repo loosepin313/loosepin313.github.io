@@ -34,7 +34,7 @@ color:
 footer:
   copyright: charris Enterprises
   location: Sydney Australia
-  social: Around the Web
+  social: JAMD Around the Web
   credits: Credits
 
 # Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
@@ -44,7 +44,7 @@ social:
   - title: facebook
     url:
   - title: linkedin
-    url:
+    url: https://www.linkedin.com/in/loosepin313
 
 # Postal address (add as many lines as necessary)
 address:
