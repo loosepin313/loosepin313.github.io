@@ -1,10 +1,10 @@
 # Site settings
-title: Loosepin.Dev
+title: JAMD SERVICES
 email: chris.m.harris@gmail.com
 url: https://loosepin313.github.io
 description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
 keywords: "your keywords, separated by commas"
-skills: "Web Developer - Graphic Artist - User Experience Designer"
+skills: "Strategies that deliver what you need"
 meta_author: Harris Christopher
 
 # Google webmaster tools
@@ -41,6 +41,10 @@ footer:
 social:
   - title: twitter
     url: http://twitter.com/loosepin313
+  - title: facebook
+    url:
+  - title: linkedin
+    url:
 
 # Postal address (add as many lines as necessary)
 address:
