@@ -8,6 +8,4 @@ project-date: January 2020
 client: Charris Enterprises
 category: Web Development
 description: This is a new project that is designed to showcase all of the JAMD services and features.
-It makes it easy to update these entries via simple text.
-
 ---
