@@ -1,12 +1,12 @@
 # Site configuration
-title: Your Name
-email: your.email@example.com
+title: Chris Harris
+email: chris.m.harris@gmail.com
 description: >-
-  Personal website and blog
+  Just my contact info and a little blog
 baseurl: ""
-url: "https://yourusername.github.io"
-twitter_username: yourtwitter
-github_username: yourgithub
+url: "https://loosepin313.github.io"
+twitter_username: dont do twitter
+github_username: loosepin313
 
 # Build settings
 markdown: kramdown
