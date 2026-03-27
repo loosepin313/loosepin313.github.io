@@ -1,0 +1,10 @@
+baseURL = "https://yourwebsite.com"
+languageCode = "en-us"
+title = "Your Name"
+
+[params]
+    description = "Personal website and blog"
+    author = "Your Name"
+    twitter = "yourtwitter"
+    github = "yourgithub"
+    email = "your.email@example.com"
