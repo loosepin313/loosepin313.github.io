@@ -11,9 +11,8 @@ title: Contact Me
     <h2>Get in Touch</h2>
     <p>You can contact me via:</p>
     <ul>
-        <li>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></li>
-        <li>Twitter: <a href="https://twitter.com/yourtwitter">@yourtwitter</a></li>
-        <li>GitHub: <a href="https://github.com/yourgithub">github.com/yourgithub</a></li>
+        <li>Email: <a href="mailto:chris.m.harris@gmail.com">chris.m.harris@gmail.com</a></li>
+        <li>GitHub: <a href="https://github.com/loosepin313">github.com/loosepin313</a></li>
     </ul>
 </section>
 
