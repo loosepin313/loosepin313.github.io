@@ -1,5 +1,6 @@
 ---
 layout: default
+title: Home
 ---
 
 <h1>Welcome to My Personal Website</h1>
