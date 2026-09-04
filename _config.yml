@@ -2,15 +2,14 @@
 title: Chris Harris
 email: chris.m.harris@gmail.com
 description: >-
-  Personal website with about section and blog
-baseurl: ""
+  Personal website and blog of Chris Harris — software developer focused on
+  clean, efficient, and user-friendly software.
 url: "https://loosepin313.github.io"
-twitter_username: dont do twitter
+baseurl: ""
 github_username: loosepin313
 
 # Build settings
 markdown: kramdown
-theme: minima
 plugins:
   - jekyll-feed
 
@@ -23,8 +22,9 @@ defaults:
       layout: "post"
       permalink: "/:year/:month/:day/:title/"
 
-# Collections
-collections:
-  posts:
-    output: true
-    permalink: /:collection/:year/:month/:day/:title/
+# Keep build output clean
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - LICENSE
+  - README.md

@@ -1,33 +1,36 @@
 # Personal Website
 
-This is a simple personal website built with Jekyll.
+Personal website and blog for [loosepin313](https://github.com/loosepin313), built with [Jekyll](https://jekyllrb.com/) and hosted on GitHub Pages.
 
 ## Features
 
-- Clean, responsive design
-- About section with personal information
-- Blog section with posts
-- Contact page
-- Static site generation
+- Minimal, dependency-free design (JetBrains Mono, light/dark mode with system-preference detection and manual toggle)
+- Blog via Jekyll posts + RSS feed (`jekyll-feed`)
+- About and contact pages
 
-## Getting Started
+## Development
 
-1. Install Jekyll and Bundler: `gem install jekyll bundler`
-2. Install dependencies: `bundle install`
-3. Serve the site locally: `bundle exec jekyll serve`
+```sh
+gem install jekyll bundler
+bundle install
+bundle exec jekyll serve    # http://localhost:4000
+```
 
-## Customization
+## Structure
 
-To customize this website:
-1. Edit `_config.yml` to change site settings
-2. Modify `index.md` to change the home page content
-3. Update `about.md` and `contact.md` with your information
-4. Add new blog posts to the `_posts` directory
+| Path | Purpose |
+| --- | --- |
+| `_config.yml` | Site metadata and build settings |
+| `_layouts/` | HTML layouts (`default`, `page`, `post`) |
+| `_posts/` | Blog posts (`YYYY-MM-DD-title.md`) |
+| `assets/css/style.css` | All styling — theme design tokens at the top |
+| `assets/js/theme.js` | Light/dark theme toggle |
+| `index.md` / `about.md` / `contact.md` / `404.html` | Pages |
 
 ## Deployment
 
-This site is designed to be deployed to GitHub Pages. Simply push to a repository with the proper structure.
+Push to the `main` branch of the `loosepin313.github.io` repository — GitHub Pages builds it automatically.
 
 ## License
 
-This project is licensed under the MIT License.
+[MIT](./LICENSE)

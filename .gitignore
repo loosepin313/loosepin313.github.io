@@ -1,9 +1,12 @@
 # Dependencies
-/vendor/bundle/
-Gemfile.lock
+/vendor/
+.bundle/
+node_modules/
 
 # Generated files
 _site/
+.jekyll-cache/
+Gemfile.lock
 
 # OS generated files
 .DS_Store
