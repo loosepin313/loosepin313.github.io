@@ -6,6 +6,7 @@ permalink: /blog/
 
 All posts, newest first.
 
+<section>
 {% for post in site.posts %}
 <a class="post-card" href="{{ post.url }}">
     <h3>{{ post.title }}</h3>
@@ -13,3 +14,4 @@ All posts, newest first.
     <p class="excerpt">{{ post.excerpt | strip_html | truncatewords: 35 }}</p>
 </a>
 {% endfor %}
+</section>
