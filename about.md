@@ -4,15 +4,10 @@ title: About
 permalink: /about/
 ---
 
-I'm a Senior Platform &amp; DevOps Engineer with 35+ years of experience, delivering complex, high-availability systems across enterprise, government, and financial sectors. I own end-to-end delivery — from requirements and architecture through implementation, testing, and production deployment — and I care about translating technical strategy into measurable outcomes, on time.
+I'm a Senior Platform &amp; DevOps Engineer with 35+ years of experience, delivering complex systems across enterprise, government, and financial sectors. I own end-to-end delivery — from requirements and architecture through implementation, testing, and production deployment — and I care about translating technical strategy into measurable outcomes, on time.
 
-Core philosophy: document, standardise, optimise, automate, always deliver.
-
-## Selected work
-
-- Designed, built, and delivered a full application platform for a financial customer that is operated on behalf of one of the Big Four banks.
-- Built and managed standard operating environments for a financial institution — a precursor to the OSKO payment system.
-- Designed, built, and deployed Linux SOEs for Woolworths — the basis of the original Everyday Rewards system and part of the migration of legacy HP-UX midrange systems to modern x86_64 platforms.
+## Core philosophy
+document, standardise, optimise, automate, always deliver.
 
 ## Skills
 
@@ -22,7 +17,7 @@ Core philosophy: document, standardise, optimise, automate, always deliver.
 - SLA/KPI-driven environment optimisation
 - Stakeholder management — translating complex requirements into actionable outcomes
 - Risk mitigation &amp; technical debt management
-- Web development (HTML, CSS, JavaScript), backend (Node.js, Python, Ruby), databases, UI/UX
+- Coding whatever is required at the time to do the job.
 
 ## Certifications
 
