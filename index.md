@@ -4,14 +4,14 @@ title: Home
 ---
 
 <section class="hero">
-    <h1>Hi, I'm Chris Harris.</h1>
-    <p class="lede">Software developer focused on clean, efficient, and user-friendly software.</p>
+    <h1>Hi, I'm Charris.</h1>
+    <p class="lede">A Senior DevOps Engineer from downtown Australia who loves Linux and anything technology related.</p>
 </section>
 
 <section>
     <h2>About me</h2>
-    <p>I build web applications end to end — from the database to the UI. I enjoy solving tricky problems, keeping things simple, and staying current with new tools and techniques.</p>
-    <p>When I'm not coding, you'll find me exploring new tech, contributing to open source, or writing about what I learn.</p>
+    <p>I'm a builder of all the things. My speciality is Linux but I can be found having to deal with that other OS from time to time. Of late with the rise of the machines I find myself tinkering with runnig my own local LLM setup and trying to optomise my agent of choice Pi.dev.  I'm also a retro nerd with C64's and to many 386,486 and pentium era machines stacked on my bench to be pulled out and fired up when I feel like a little bit of self indulged hair pulling.  I also hammer my 3D printer a fair bit and have recently built a few 10' labrax setups. To be honnest I have too much shit, I really need to cull it all back a bit.  Also and avid engine head love anything with an engine especially rotaries and a mad keen 4wder. Camping and 4wding is a big love.</p>
+    <p>When I'm not doing stuff and things for work, you'll find me exploring new tech, spending way to many hours trying to work out how something works.  I would say I have ADHD and probs a bit on the spectrum, when I work out how it works I'm onto the next thing and that can be both good and bad, good as I've learnt something and bad because I usually have many many little unfinished things all hanging around my little den of mess ans the wife like to call my office.</p>
 </section>
 
 <section>
