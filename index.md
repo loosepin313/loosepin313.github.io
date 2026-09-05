@@ -4,7 +4,7 @@ title: Home
 ---
 
 <section class="hero">
-    <h1>Hi, I'm Charris.</h1>
+    <h1><img class="hero-logo" src="/assets/images/loosepin313-64.png" alt="" width="64" height="64"> Hi, I'm Charris.</h1>
     <p class="lede">A Senior DevOps Engineer from downtown Australia who loves Linux and anything technology related.</p>
 </section>
 

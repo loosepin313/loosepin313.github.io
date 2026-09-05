@@ -249,6 +249,13 @@ main.container {
     padding: 1.5rem 0 0.5rem;
 }
 
+.hero h1 .hero-logo {
+    height: 1.2em;
+    width: auto;
+    vertical-align: -0.2em;
+    margin-right: 0.45rem;
+}
+
 .hero h1 {
     font-size: clamp(1.9rem, 5vw, 2.6rem);
     line-height: 1.2;
