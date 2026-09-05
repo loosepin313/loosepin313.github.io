@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-I'm a Senior Platform &amp; DevOps Engineer with 35+ years of experience, currently at Capgemini, delivering complex, high-availability systems across enterprise, government, and financial sectors. I own end-to-end delivery — from requirements and architecture through implementation, testing, and production deployment — and I care about translating technical strategy into measurable outcomes, on time.
+I'm a Senior Platform &amp; DevOps Engineer with 35+ years of experience, delivering complex, high-availability systems across enterprise, government, and financial sectors. I own end-to-end delivery — from requirements and architecture through implementation, testing, and production deployment — and I care about translating technical strategy into measurable outcomes, on time.
 
 Core philosophy: document, standardise, optimise, automate, always deliver.
 
