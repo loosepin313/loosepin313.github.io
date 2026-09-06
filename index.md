@@ -4,8 +4,9 @@ title: Home
 ---
 
 <section class="hero">
+    <img class="profile-img" src="/assets/images/crh313-320.jpg" alt="Charris" width="320" height="320">
     <h1><img class="hero-logo" src="/assets/images/loosepin313-64.png" alt="" width="64" height="64"> Hi, I'm Charris.</h1>
-    <p class="lede">A Senior DevOps Engineer from downtown Australia who loves Linux and anything technology related.</p>
+    <p class="lede">A Senior Infrastructure / DevOps Engineer from downtown Sydney Australia who loves Linux and anything technology related.</p>
 </section>
 
 <section>
