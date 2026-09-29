@@ -1,9 +1,9 @@
 # Site configuration
-title: Chris Harris (looosepin313)
+title: Chris Harris (loosepin313)
 email: chris.m.harris@gmail.com
 description: >-
-  Personal website and blog of Chris Harris — Senior DevOps Engineer focused on
-  all sorts of stuff and things.
+  Personal website and blog of Chris Harris — Senior Infrastructure / DevOps Engineer focused on
+  all the stuff and things.
 url: "https://loosepin313.github.io"
 baseurl: ""
 github_username: loosepin313
