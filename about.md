@@ -21,6 +21,8 @@ document, standardise, optimise, automate, always deliver.
 
 ## Certifications
 
+Obviously none are current, but it shows what I've been across over the years.
+
 - RHCE — Red Hat Certified Engineer (RHEL 5), 2010
 - RHCT — Red Hat Certified Technician (RHEL 5), 2009
 - RH401 — Enterprise Deployment, Virtualization, Systems Management
