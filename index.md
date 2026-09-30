@@ -25,7 +25,7 @@ title: Home
     {% if site.posts.size == 0 %}
         <p class="meta">Nothing published yet — check back soon.</p>
     {% endif %}
-    {% for post in site.posts limit: 5 %}
+    {% for post in site.posts limit: 3 %}
         <a class="post-card" href="{{ post.url }}">
             <h3>{{ post.title }}</h3>
             <span class="meta">{{ post.date | date: "%B %-d, %Y" }}</span>
