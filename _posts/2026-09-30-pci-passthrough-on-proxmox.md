@@ -6,6 +6,8 @@ categories: [linux, proxmox, gpu]
 
 Passing a GPU through to a VM on Proxmox with VFIO, step by step.
 
+> **Reference:** Based on a post by [@nodesdeep on X](https://x.com/nodesdeep) — not my own write-up, just something I wanted to keep.
+
 ## 1. Check IOMMU Support
 
 ```bash
