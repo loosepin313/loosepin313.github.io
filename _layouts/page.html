@@ -3,6 +3,14 @@ layout: default
 ---
 
 <article class="prose">
-    <h1>{{ page.title }}</h1>
+    <div class="page-head">
+        <h1>{{ page.title }}</h1>
+        {% if page.search %}
+        <input type="search" id="post-search" class="post-search" placeholder="filter posts…" aria-label="Filter posts on this page" autocomplete="off">
+        {% endif %}
+    </div>
     {{ content }}
+    {% if page.search %}
+    <script src="/assets/js/blog-search.js"></script>
+    {% endif %}
 </article>

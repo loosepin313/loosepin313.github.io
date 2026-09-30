@@ -2,6 +2,7 @@
 layout: page
 title: Blog
 permalink: /blog/
+search: true
 ---
 
 All posts, newest first.
@@ -15,3 +16,4 @@ All posts, newest first.
 </a>
 {% endfor %}
 </section>
+<p id="search-empty" class="meta" hidden>No posts match your search.</p>
