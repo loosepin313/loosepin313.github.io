@@ -8,13 +8,19 @@
     const cards = Array.from(document.querySelectorAll(".post-card"));
     const empty = document.getElementById("search-empty");
 
+    // Case- and diacritic-insensitive comparison.
+    const fold = (s) =>
+        s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    const cardTexts = cards.map((c) => fold(c.textContent));
+
     function applyFilter() {
-        const q = input.value.trim().toLowerCase();
+        const q = fold(input.value.trim());
         let visible = 0;
 
-        for (const card of cards) {
-            const match = card.textContent.toLowerCase().includes(q);
-            card.classList.toggle("is-hidden", !match);
+        for (let i = 0; i < cards.length; i++) {
+            const match = cardTexts[i].includes(q);
+            cards[i].classList.toggle("is-hidden", !match);
             if (match) visible++;
         }
 

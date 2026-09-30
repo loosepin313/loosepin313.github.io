@@ -6,11 +6,13 @@ layout: default
     <div class="page-head">
         <h1>{{ page.title }}</h1>
         {% if page.search %}
-        <input type="search" id="post-search" class="post-search" placeholder="filter posts…" aria-label="Filter posts on this page" autocomplete="off">
+        <div class="search-box">
+            <input type="search" id="post-search" class="post-search" placeholder="filter posts…" aria-label="Filter posts on this page" autocomplete="off">
+        </div>
         {% endif %}
     </div>
     {{ content }}
     {% if page.search %}
-    <script src="/assets/js/blog-search.js"></script>
+    <script src="/assets/js/blog-search.js?v=3"></script>
     {% endif %}
 </article>

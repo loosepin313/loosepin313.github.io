@@ -294,7 +294,8 @@ main.container {
 .page-head {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: space-between;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
@@ -302,16 +303,32 @@ main.container {
     margin-bottom: 0;
 }
 
+.search-box {
+    position: relative;
+    flex: 0 1 280px;
+    min-width: 200px;
+}
+
+.search-box::before {
+    content: ">_";
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 0.8rem;
+    pointer-events: none;
+}
+
 .post-search {
-    flex: 1 1 200px;
-    min-width: 0;
+    width: 100%;
     font-family: var(--font-mono);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text);
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     border-radius: 0.6rem;
-    padding: 0.45rem 0.9rem;
+    padding: 0.5rem 0.9rem 0.5rem 2.3rem;
     transition: border-color 0.2s ease;
 }
 
