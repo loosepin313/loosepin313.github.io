@@ -8,7 +8,7 @@ An AMD Instinct MI50 has no fan. Whatever cooling it gets comes from a case fan,
 
 The obvious fix — read the GPU temperature, spin a fan up above 65 °C — works. But it gets three things wrong in practice, and all three cost real debugging time. Then, once it was working, I had to undo my own temperature target. This is what I found, with the measurements.
 
-Code: [gpu-fan-control](https://git.harris4.xyz/charris/gpu-fan-control)
+Code: [gpu-fan-control](https://github.com/loosepin313/gpu-fan-control)
 
 ## 1. The fan header label does not match the chip channel
 
