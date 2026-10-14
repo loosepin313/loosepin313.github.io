@@ -6,7 +6,7 @@ categories: [linux, gpu, ai]
 
 An AMD Instinct MI50 has no fan. Whatever cooling it gets comes from a case fan, and nothing on the motherboard knows the GPU exists — the BIOS fan curve is watching CPU and chipset probes. Left alone, the card sits at 90 °C+ junction under load and throttles.
 
-The obvious fix — read the GPU temperature, spin a fan up above 65 °C — works. But it gets three things wrong in practice, and all three cost real debugging time. This is what I found, with the measurements.
+The obvious fix — read the GPU temperature, spin a fan up above 65 °C — works. But it gets three things wrong in practice, and all three cost real debugging time. Then, once it was working, I had to undo my own temperature target. This is what I found, with the measurements.
 
 Code: [gpu-fan-control](https://git.harris4.xyz/charris/gpu-fan-control)
 
@@ -106,6 +106,46 @@ idle: duty 60 = 1660 RPM, junction 36 C
 
 That is the honest lesson: **a fan curve has a power ceiling.** Below it you get silence; above it you need a power cap, better airflow, or a bigger fan.
 
+## Second pass: the 80 °C target was over-engineering
+
+That first tuning worked — junction peaked at 76 °C — and it was loud. The fan lunged every time load arrived. So I went back over it, starting with a question I should have asked first: *should this card be running at 76 °C at all?*
+
+AMD's guidance for the MI50 puts **ideal junction under load at 85–100 °C** (edge 60–80 °C), with junction critical around 100 °C and throttling above that. Sitting at 76 °C was buying reliability I did not need with noise I did have to listen to.
+
+Two separate things were making the fan aggressive, and only one of them was the temperature target.
+
+**The band was too narrow.** The control law spread 160 duty units across a 19 °C band:
+
+```
+old:  55 → 74 °C,  duty 60..220   =  8.4 duty/°C
+new:  58 → 86 °C,  duty 50..180   =  4.6 duty/°C
+```
+
+That number — duty per degree — is the loop gain. At 8.4, a few degrees of perfectly normal temperature swing moves the fan by 25–30 duty units, which is exactly what "ramps up quickly" feels like. Widening the band to 28 °C nearly halves the gain, and the fan creeps instead of lunging. **The narrow band, not the ceiling, was the cause of the aggressive ramp.**
+
+**`MAX_PWM` was too high.** From the measured table, duty 180 holds junction ~87 °C at the 192 W peaks while duty 220 holds ~84 °C. Six hundred RPM for three degrees is a bad trade.
+
+I also demoted the ceiling from an operating target to an emergency brake at 95 °C — for a detached fan, a blocked heatsink, or a sensor lying to me. That turned out to matter more than it sounds. With the band topping out at 74 °C and the ceiling at 80 °C, the override was firing during normal operation. The sudden full-blast bursts I was hearing were not the control law ramping — they were the safety override tripping, because I had put the safety margin *inside* the working range.
+
+Measured under the same 3-stream load:
+
+| metric | first tuning | retuned |
+|---|---|---|
+| avg fan | 4209 RPM | **2802 RPM** |
+| peak fan | 4687 RPM | 3391 RPM |
+| avg duty | 199 | 113 |
+| idle fan | 1664 RPM | 1386 RPM |
+| avg junction | 73.3 °C | 77.1 °C |
+| peak junction | 76 °C | 84 °C |
+| peak mem | 58 °C | 64 °C |
+| ceiling trips | — | 0 |
+
+**A third quieter in fan speed for 4 °C of junction.** Peak junction 84 °C sits inside the card's ideal band, memory is 30 °C under its critical, and the controller peaked at duty 142 — it never even reached `MAX_PWM=180`, so there is headroom left and the 95 °C ceiling stayed 11 °C away from firing.
+
+The power cap stays, but its justification changed. Uncapped at 225 W, holding junction under 95 °C needs duty ~255 (5200 RPM). Capped at 180 W, duty 180 is enough. **The cap is not protecting the card here — it is what keeps the fan off its top end.**
+
+The order I did this in is the wrong order. Pick the temperature target from the chip's documentation first, then size the fan curve to it. I tuned 10 °C colder than the card needed and paid for it in noise for a week.
+
 ## Can I just use the GPU's own fan percentage?
 
 A passively cooled MI50 exposes no `fan*_input` under the amdgpu hwmon, but the driver *does* compute a fan demand anyway: `pwm1`. It genuinely tracks temperature — it moved 37 → 63 as junction went 29 → 80 °C.
@@ -113,6 +153,8 @@ A passively cooled MI50 exposes no `fan*_input` under the amdgpu hwmon, but the 
 The problem is the range. The driver only ever asks for **37–63 out of 255 (14–24%)**, a window sized for the small fan this card does not have. Mirrored raw, it settles around 83–85 °C — the gain is too low to arrest the junction rise. Rescaling that window onto your fan's range fixes the range but not the low gain. I implemented it as a `mirror` mode because it's a reasonable curve *shape*, but proportional-on-junction is what actually hits a target.
 
 ## Configuration
+
+Final, noise-first tuning:
 
 ```ini
 GPU_PCI="0000:04:00.0"
@@ -123,16 +165,19 @@ PWM_CHANNEL=1              # chip channel, NOT the silkscreen label
 GPU_TEMP_LABEL="junction"  # not edge, not temp1
 CONTROL_MODE="proportional"
 
-TEMP_THRESHOLD_LOW=55
-TEMP_THRESHOLD_HIGH=74     # 6C before the ceiling, because of thermal lag
-MIN_PWM=60                 # 23% -> ~1660 RPM
-MAX_PWM=220                # 86% -> ~4700 RPM
+TEMP_THRESHOLD_LOW=58
+TEMP_THRESHOLD_HIGH=86     # wide band on purpose: low loop gain
+MIN_PWM=50                 # 19% -> ~1390 RPM
+MAX_PWM=180                # 71% -> ~4080 RPM
 
-CEILING_TEMP=80
+CEILING_TEMP=95            # emergency brake, not the operating target
 CEILING_HYSTERESIS=6
 
+TEMP_AVG_N=4               # smoother response to transients
+PWM_STEP=4                 # finer steps, less noticeable
+
 FAN_OFF_BELOW_C=""         # never stop the fan on a passive card
-GPU_POWER_LIMIT_W=180
+GPU_POWER_LIMIT_W=180      # keeps the fan off its top end
 ```
 
 Devices are found by hwmon **name** and PCI address, never by `hwmonN` index — the kernel reassigns those between boots and kernel updates, which is exactly what broke my earlier hardcoded version.
@@ -163,4 +208,4 @@ sudo nano /etc/gpu-fan-control.conf
 sudo systemctl restart gpu-fan-control.service
 ```
 
-MIT licensed. If you have a passively cooled card in a box with a dumb fan curve, measure the curve before trusting the labels — on the board, on the sensors, and on the ceiling your cooling can actually hold.
+MIT licensed. If you have a passively cooled card in a box with a dumb fan curve: look up the chip's real temperature limits before picking a target, measure the curve instead of trusting the labels — on the board, on the sensors, and on the ceiling your cooling can actually hold — and remember that how *wide* your control band is matters as much for noise as where it sits.
