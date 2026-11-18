@@ -6,7 +6,7 @@ categories: [linux, ai, gpu]
 
 I started a new box (`llm2`) to run `llama.cpp` with the Vulkan backend on an AMD GPU. The build itself was trivial. The real work was to make the GPU visible to Vulkan. Below is the history of that install, with notes on what each part does and where I wasted time.
 
-For the clean package list, read my earlier post [Building llama.cpp with Vulkan on Rocky Linux 10](https://loosepin313.github.io/blog/build-llama-cpp-with-vulkan-on-rocky-linux-10/). This post is the troubleshooting story.
+For the clean package list, read my earlier post [Building llama.cpp with Vulkan on Rocky Linux 10](https://loosepin313.github.io/2026/10/04/build-llama-cpp-with-vulkan-on-rocky-linux-10/). This post is the troubleshooting story.
 
 ---
 
