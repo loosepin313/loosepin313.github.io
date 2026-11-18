@@ -431,6 +431,21 @@ Then query it:
 llama-server --host 0.0.0.0 --port 8080 -p "explain gravity"
 ```
 
+Open port 8080 so the server is reachable from outside the box. The `--permanent` flag writes it to the firewall config, so it survives a reboot.
+
+```bash
+sudo firewall-cmd --permanent --add-port=8080/tcp
+sudo firewall-cmd --reload
+sudo firewall-cmd --list-ports
+```
+
+Confirm the socket and the firewall rule:
+
+```bash
+ss -ltnp | grep 8080
+sudo firewall-cmd --list-ports
+```
+
 Restart or reload a model without touching the box:
 
 ```bash
