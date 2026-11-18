@@ -4,7 +4,9 @@ date: 2026-11-18 12:00:00 +0000
 categories: [linux, ai, gpu]
 ---
 
-I started a new box (`llm2`) to run `llama.cpp` with the Vulkan backend on an AMD Radeon RX 580 (8 GB). The build itself was trivial. The real work was to make the GPU visible to Vulkan. Below is the history of that install, with notes on what each part does and where I wasted time.
+I started a new box (`llm2`). It runs `llama.cpp` with the Vulkan backend on an AMD Radeon RX 580 (8 GB). The build was trivial. The real work was to make the GPU visible to Vulkan.
+
+Below is the history of that install, with notes on what each part does and where I wasted time.
 
 For the clean package list, read my earlier post [Building llama.cpp with Vulkan on Rocky Linux 10](https://loosepin313.github.io/2026/10/04/build-llama-cpp-with-vulkan-on-rocky-linux-10/). This post is the troubleshooting story.
 
@@ -12,7 +14,7 @@ For the clean package list, read my earlier post [Building llama.cpp with Vulkan
 
 ## Step 0 — Base System
 
-Standard setup for a new machine. I set SELinux to permissive and enabled EPEL and CRB. I created a `packer` user in `wheel` for Ansible, plus a dedicated `llama-cpp` user for the build.
+Standard setup for a new machine. I set SELinux to permissive. I enabled EPEL and CRB. I created a `packer` user in `wheel` for Ansible. I also created a dedicated `llama-cpp` user for the build.
 
 ```bash
 visudo
@@ -85,7 +87,7 @@ ls /usr/share/vulkan/icd.d/                     # is a RADV ICD json present?
 cat /proc/cmdline
 ```
 
-`lspci -nnk` is the important one. It tells you whether `amdgpu` is bound to the device. If it is not, no amount of userspace changes will help.
+`lspci -nnk` is the important one. It tells you whether `amdgpu` is bound to the device. If it is not, no amount of userspace changes will help. The rest of the session was wasted time.
 
 Also note that `lspci` is not installed by default. It lives in `pciutils`.
 
@@ -119,7 +121,7 @@ usermod -a -G video charris
 usermod -a -G render charris
 ```
 
-The `render` group owns `/dev/dri/renderD128`, which is the node that compute-only Vulkan clients use. This is easy to forget, and the failure mode is a confusing "no devices" from `vulkaninfo` even when the driver is fine.
+The `render` group owns `/dev/dri/renderD128`. That is the node compute-only Vulkan clients use. This is easy to forget. The failure mode is a confusing "no devices" from `vulkaninfo`, even when the driver is fine.
 
 The full runtime set, for reference:
 
@@ -147,7 +149,7 @@ cmake --build build --config Release -- -j$(nproc)
 ./build/bin/llama-cli --list-devices
 ```
 
-CMake detects Vulkan on its own. I still pass `-DGGML_VULKAN=ON`. If the loader or the headers are missing, the configure step then fails with a clear error instead of quietly building a CPU-only binary.
+CMake detects Vulkan on its own. I still pass `-DGGML_VULKAN=ON` for clarity. If the loader or the headers are missing, the configure step fails with a clear error. It does not quietly build a CPU-only binary.
 
 ---
 
@@ -207,7 +209,7 @@ If you run out of memory, lower these two flags first:
 1. Install `amd-gpu-firmware` and `amd-ucode-firmware` in the very first `dnf` command. It is one line, and it was the whole root cause.
 2. Run `lspci -nnk` and `ls -l /dev/dri` **before** you install any Vulkan packages. Both pointed at firmware in under a minute.
 3. Add the user to `video` and `render` when you create the account, not afterwards.
-4. Run `dracut -f` and then `reboot`. Do not expect new firmware to apply to an already loaded `amdgpu` module. `rmmod` and `modprobe` are not a reliable substitute here.
+4. Run `dracut -f`, then `reboot`. Do not expect new firmware to apply to an already loaded `amdgpu` module. `rmmod` and `modprobe` are not a reliable substitute here. The firmware must load from the initramfs.
 
 ---
 
@@ -325,6 +327,116 @@ Run it:
 ```bash
 sudo bash ~/setup-llama-cpp-vulkan.sh
 sudo reboot
+```
+
+---
+
+## Step 7 — Systemd Service
+
+Run the server under systemd so it survives a reboot and can be queried over HTTP.
+
+Create `/etc/systemd/system/llama-server.service`:
+
+```ini
+[Unit]
+Description=llama.cpp server
+After=network.target
+
+[Service]
+Type=simple
+User=llama-cpp
+Group=llama-cpp
+# Match HSA_OVERRIDE_GFX_VERSION to the actual card (RX 580 = gfx803).
+Environment=HSA_OVERRIDE_GFX_VERSION="8.0.3"
+Environment=HSA_ENABLE_SDMA="0"
+Environment=HIP_VISIBLE_DEVICES="0"
+WorkingDirectory=/var/lib/llama
+ExecStart=/usr/local/bin/llama-server --host 0.0.0.0 --port 8080 \
+  -m /var/lib/llama/models/qwen2.5-coder-7b-instruct-q5_k_m.gguf \
+  --ctx-size 4096 \
+  --ngl 99 \
+  --threads 8 \
+  --fa on \
+  --jinja \
+  --batch-size 4096 \
+  --cache-type-k q4_0 \
+  --cache-type-v q4_0 \
+  --models-preset /var/lib/llama/models.ini
+RestartSec=5
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Notes:
+- `User` and `Group` are `llama-cpp`, not the generic `llama` from the CUDA post. Make sure the service directory is owned by that user.
+- `HSA_OVERRIDE_GFX_VERSION` must match the card. The RX 580 is gfx803, so `8.0.3` is correct. On the Vega/Cezanne box that is `9.0.6`.
+- The `ExecStart` runs the 7B Q5_K_M model, which is the best balance on 8 GB. Lower `--ctx-size` and `--ngl` if the card runs out of VRAM.
+- `--models-preset` loads the INI file below, so the server can switch models without a restart.
+
+Create the model directory and the preset file:
+
+```bash
+sudo mkdir -p /var/lib/llama/models
+sudo cp ~/models/qwen2.5-coder-7b-instruct-q5_k_m.gguf /var/lib/llama/models/
+
+sudo tee /var/lib/llama/models.ini <<'EOF'
+[*]
+flash-attn = on
+n-gpu-layers = all
+threads = 8
+jinja = 1
+parallel = 1
+
+[Ornith-1.5-9B-Q4_K_M]
+ctx-size = 4096
+batch-size = 2048
+ubatch-size = 1024
+cache-type-k = q4_0
+cache-type-v = q4_0
+
+[qwen2.5-coder-7b-instruct-q5_k_m]
+ctx-size = 4096
+cache-type-k = q4_0
+cache-type-v = q4_0
+
+[Qwen2.5-Coder-1.5B-Q6_K]
+ctx-size = 8192
+cache-type-k = q4_0
+cache-type-v = q4_0
+EOF
+```
+
+Available models on an 8 GB RX 580:
+
+- `/var/lib/llama/models/qwen2.5-coder-7b-instruct-q5_k_m.gguf` (active, 5.1 GB, best balance)
+- `/var/lib/llama/models/Ornith-1.5-9B-Q4_K_M.gguf` (5.4 GB, fits at 4096 context)
+- `/var/lib/llama/models/Qwen2.5-Coder-1.5B-Q6_K.gguf` (fast, light, 8192 context)
+
+The 7B and 9B models fit, but the 14B class does not. Anything 14B or larger does not fit in 8 GB of VRAM.
+
+Start the service:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable llama-server
+sudo systemctl start llama-server
+sudo systemctl status llama-server
+```
+
+Then query it:
+
+```bash
+llama-server --host 0.0.0.0 --port 8080 -p "explain gravity"
+```
+
+Restart or reload a model without touching the box:
+
+```bash
+sudo systemctl restart llama-server     # reload the preset
+sudo systemctl stop llama-server
+sudo systemctl start llama-server       # stop the socket
 ```
 
 ---
